@@ -1,0 +1,58 @@
+{
+  "active": true,
+  "name": "Clock",
+  "steps": [{
+      "id": "tap",
+      "values": {
+        "testableId": "test_page_Clock"
+      }
+    },
+    {
+      "id": "capture_widget",
+      "values": {
+        "testableId": "column",
+        "goldenCompatible": "true"
+      }
+    },
+    {
+      "id": "compare_golden_image",
+      "values": {
+        "failWhenGoldenMissing": "true"
+      }
+    },
+    {
+      "id": "compare_golden_image",
+      "values": {
+        "failWhenGoldenMissing": "true",
+        "imageOnFail": "isolated"
+      }
+    },
+    {
+      "id": "hide_widget",
+      "values": {
+        "testableId": "date",
+        "opacity": 0
+      }
+    },
+    {
+      "id": "hide_widget",
+      "values": {
+        "testableId": "time",
+        "opacity": 1
+      }
+    },
+    {
+      "id": "capture_widget",
+      "values": {
+        "imageId": "column_hidden",
+        "testableId": "column",
+        "goldenCompatible": "true"
+      }
+    },
+    {
+      "id": "compare_golden_image"
+    }
+  ],
+  "suiteName": "Images",
+  "version": 0
+}

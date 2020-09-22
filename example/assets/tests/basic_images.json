@@ -1,0 +1,35 @@
+{
+  "active": true,
+  "name": "Basic Images",
+  "steps": [{
+      "id": "obscure_widget",
+      "values": {
+        "testableId": "test_page_Gestures",
+        "color": "#FF000000"
+      }
+    },
+    {
+      "id": "capture_widget",
+      "values": {
+        "testableId": "test_page_Gestures",
+        "backgroundColor": "#ff333333"
+      }
+    },
+    {
+      "id": "obscure_widget",
+      "values": {
+        "testableId": "test_page_Gestures",
+        "color": "#00000000"
+      }
+    },
+    {
+      "id": "capture_widget",
+      "values": {
+        "testableId": "test_page_Gestures",
+        "backgroundColor": "#ff333333"
+      }
+    }
+  ],
+  "suiteName": "Images",
+  "version": 1
+}
