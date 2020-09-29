@@ -87,26 +87,28 @@ class CompareGoldenImageStep extends TestRunnerStep {
       testVersion: report.version,
     );
 
-    if (master == null && failWhenGoldenMissing == true) {
-      throw Exception('imageId: [$imageId] -- error loading golden image');
-    }
-
-    var comparitor = GoldenImageComparator();
-    var result = await comparitor.compareLists(actual, master);
-
-    if (result.passed != true) {
-      var failImage =
-          imageOnFail == 'isolated' ? result.isolated : result.masked;
-      if (failImage != null) {
-        report?.attachScreenshot(
-          (await failImage.toByteData(format: ImageByteFormat.png))
-              .buffer
-              .asUint8List(),
-          goldenCompatible: false,
-          id: 'failed-${imageId}',
-        );
+    if (master == null) {
+      if (failWhenGoldenMissing == true) {
+        throw Exception('imageId: [$imageId] -- error loading golden image');
       }
-      throw Exception('${result.error}');
+    } else {
+      var comparitor = GoldenImageComparator();
+      var result = await comparitor.compareLists(actual, master);
+
+      if (result.passed != true) {
+        var failImage =
+            imageOnFail == 'isolated' ? result.isolated : result.masked;
+        if (failImage != null) {
+          report?.attachScreenshot(
+            (await failImage.toByteData(format: ImageByteFormat.png))
+                .buffer
+                .asUint8List(),
+            goldenCompatible: false,
+            id: 'failed-${imageId}',
+          );
+        }
+        throw Exception('${result.error}');
+      }
     }
   }
 
