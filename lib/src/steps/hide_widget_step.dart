@@ -39,7 +39,7 @@ class HideWidgetStep extends TestRunnerStep {
 
     if (map != null) {
       result = HideWidgetStep(
-        hide: map['hide'] == null ? true : false,
+        hide: map['hide'] == null ? true : JsonClass.parseBool(map['hide']),
         testableId: map['testableId'],
         timeout: JsonClass.parseDurationFromSeconds(map['timeout']),
       );
