@@ -44,8 +44,7 @@ class TestImagesTranslations {
 
   static const atf_images_help_hide_widget = TranslationEntry(
     key: 'atf_images_help_hide_widget',
-    value:
-        'Hides (or shows) the widget.  Set the opacity to 0 to hide it and 1 to show it.',
+    value: 'Hides (or shows) the widget based on the "hide" value.',
   );
 
   static const atf_images_help_obscure_widget = TranslationEntry(

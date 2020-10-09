@@ -1,3 +1,8 @@
+## [1.0.2+1] - October 9th, 2020
+
+* Minor fix for the help text for `hide_widget`.
+
+
 ## [1.0.2] - September 29th, 2020
 
 * Fix for when `hide_widget` has an explict `hide` value set to `true` vs an implicit value.
