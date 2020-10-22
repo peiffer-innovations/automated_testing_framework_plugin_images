@@ -1,6 +1,11 @@
 import 'package:static_translations/static_translations.dart';
 
 class TestImagesTranslations {
+  static const atf_form_allowed_delta = TranslationEntry(
+    key: 'atf_form_allowed_delta',
+    value: 'Allowed Pixel % Difference',
+  );
+
   static const atf_form_background_color = TranslationEntry(
     key: 'atf_form_background_color',
     value: 'Background Color',

@@ -7,8 +7,12 @@ import 'package:json_class/json_class.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:meta/meta.dart';
 
+/// Compares the images and fails if more that [allowedDelta] percentage of
+/// pixels are different.  By default, the difference is allowed to be 1% of the
+/// total pixels.
 class CompareGoldenImageStep extends TestRunnerStep {
   CompareGoldenImageStep({
+    this.allowedDelta,
     this.failWhenGoldenMissing,
     this.imageId,
     this.imageOnFail,
@@ -16,6 +20,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
             imageOnFail == 'isolated' ||
             imageOnFail == 'masked');
 
+  final dynamic allowedDelta;
   final bool failWhenGoldenMissing;
   final String imageId;
   final String imageOnFail;
@@ -25,6 +30,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
   ///
   /// ```json
   /// {
+  ///   "allowedDelta": <double>,
   ///   "failWhenGoldenMissing": <bool>,
   ///   "imageId": <String>
   /// }
@@ -38,6 +44,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
 
     if (map != null) {
       result = CompareGoldenImageStep(
+        allowedDelta: JsonClass.parseDouble(map['allowedDelta']),
         failWhenGoldenMissing: map['failWhenGoldenMissing'] == null
             ? true
             : JsonClass.parseBool(map['failWhenGoldenMissing']),
@@ -57,6 +64,10 @@ class CompareGoldenImageStep extends TestRunnerStep {
     @required TestReport report,
     @required TestController tester,
   }) async {
+    var allowedDelta = JsonClass.parseDouble(
+      tester.resolveVariable(this.allowedDelta),
+      0.01,
+    );
     var imageId = this.imageId ??
         report?.images
             ?.where((image) => image.goldenCompatible == true)
@@ -67,7 +78,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
     }
 
     var name =
-        "compare_golden_image('$imageId', '$failWhenGoldenMissing', '$imageOnFail')";
+        "compare_golden_image('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
     log(
       name,
       tester: tester,
@@ -93,7 +104,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
       }
     } else {
       var comparitor = GoldenImageComparator();
-      var result = await comparitor.compareLists(actual, master);
+      var result = await comparitor.compareLists(actual, master, allowedDelta);
 
       if (result.passed != true) {
         var failImage =

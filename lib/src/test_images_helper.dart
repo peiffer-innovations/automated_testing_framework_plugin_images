@@ -31,6 +31,7 @@ class TestImagesHelper {
           help: TestImagesTranslations.atf_images_help_compare_golden_image,
           id: 'compare_golden_image',
           keys: const {
+            'allowedDelta',
             'failWhenGoldenMissing',
             'imageId',
             'imageOnFail',

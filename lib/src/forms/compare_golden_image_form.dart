@@ -1,6 +1,7 @@
 import 'package:automated_testing_framework/automated_testing_framework.dart';
 import 'package:automated_testing_framework_plugin_images/automated_testing_framework_plugin_images.dart';
 import 'package:flutter/material.dart';
+import 'package:form_validation/form_validation.dart';
 import 'package:static_translations/static_translations.dart';
 
 class CompareGoldenImageForm extends TestStepForm {
@@ -35,6 +36,20 @@ class CompareGoldenImageForm extends TestStepForm {
               context: context,
               id: 'imageId',
               label: TestStepTranslations.atf_form_image_id,
+              values: values,
+            ),
+            SizedBox(height: 16.0),
+            buildEditText(
+              context: context,
+              defaultValue: '0.01',
+              id: 'allowedDelta',
+              label: TestImagesTranslations.atf_form_allowed_delta,
+              validators: [
+                RequiredValidator(),
+                NumberValidator(),
+                MaxNumberValidator(number: 1.0),
+                MinNumberValidator(number: 0.0),
+              ],
               values: values,
             ),
             SizedBox(height: 16.0),

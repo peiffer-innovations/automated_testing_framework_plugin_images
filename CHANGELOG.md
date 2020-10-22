@@ -1,3 +1,8 @@
+## [1.0.3] - October 20th, 2020
+
+* Updated `compare_golden_image` to be configured with a % of allowed pixel deltas.
+
+
 ## [1.0.2+1] - October 9th, 2020
 
 * Minor fix for the help text for `hide_widget`.

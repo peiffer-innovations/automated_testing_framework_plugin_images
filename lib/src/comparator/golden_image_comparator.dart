@@ -10,7 +10,10 @@ import 'package:meta/meta.dart';
 
 class GoldenImageComparator {
   Future<ComparisonResult> compareLists(
-      List<int> test, List<int> master) async {
+    List<int> test,
+    List<int> master,
+    double allowedDelta,
+  ) async {
     if (identical(test, master)) return ComparisonResult(passed: true);
 
     if (test == null || master == null || test.isEmpty || master.isEmpty) {
@@ -81,7 +84,9 @@ class GoldenImageComparator {
       }
     }
 
-    if (pixelDiffCount > 0) {
+    var delta = pixelDiffCount / totalPixels;
+
+    if (delta > allowedDelta) {
       return ComparisonResult(
         passed: false,
         error: 'Pixel test failed, '

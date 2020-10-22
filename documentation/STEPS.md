@@ -74,11 +74,11 @@ Key                | Type    | Required | Supports Variable | Description
 
 **How it Works**
 
-1. Loads the appropriate golden image
-2. Compates the golden image to an image from the current `TestReport`
+1. Loads the appropriate golden image.
+2. Compates the golden image to an image from the current `TestReport`.
 3. Fails if the current image cannot be located.
 4. Fails if it cannot load the golden image and `failWhenGoldenMissing` is `true` or omitted.
-5. Fails if the golden image does not match the current image.
+5. Fails if the golden image has more than `allowedDelta` percentage (0 to 1 based) pixels that are different.
 
 **Example**
 
@@ -87,6 +87,7 @@ Key                | Type    | Required | Supports Variable | Description
   "id": "compare_golden_image",
   "image": "<optional_base_64_image>",
   "values": {
+    "allowedDelta": 0.01,
     "failWhenGoldenMissing": true,
     "imageId": "myImageId",
     "imageOnFail": "isolated"
@@ -98,6 +99,7 @@ Key                | Type    | Required | Supports Variable | Description
 
 Key                     | Type    | Required | Supports Variable | Description
 ------------------------|---------|----------|-------------------|-------------
+`allowedDelta`          | number  | No       | Yes               | 0 - 1 decimal number representing the percentage of pixels that may be different before failing.  Set to 0 to fail on a single different pixel.  Defaults to `0.01` or 1%.
 `failWhenGoldenMissing` | boolean | No       | No                | Set to `true` to fail when no golden image exists for the current test image.  Set to `false` to ignore missing golden images.  Defaults to `true`.
 `imageId`               | String  | No       | No                | The id of the golden image to test against.
 `imageOnFail`           | String  | No       | No                | Set to `isolated` to attach an image that shows only the deltas on fail, set to `masked` to attach an image with the deltas overlayed on the golden.  Defaults to `masked`.
