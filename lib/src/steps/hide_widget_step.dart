@@ -52,6 +52,7 @@ class HideWidgetStep extends TestRunnerStep {
   /// to set the opacity on the widget.
   @override
   Future<void> execute({
+    @required CancelToken cancelToken,
     @required TestReport report,
     @required TestController tester,
   }) async {
@@ -65,12 +66,14 @@ class HideWidgetStep extends TestRunnerStep {
     );
     var finder = await waitFor(
       testableId,
+      cancelToken: cancelToken,
       tester: tester,
       timeout: timeout,
     );
 
     await sleep(
       tester.delays.postFoundWidget,
+      cancelStream: cancelToken.stream,
       tester: tester,
     );
 

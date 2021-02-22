@@ -59,6 +59,7 @@ class ObscureWidgetStep extends TestRunnerStep {
   /// widget.
   @override
   Future<void> execute({
+    @required CancelToken cancelToken,
     @required TestReport report,
     @required TestController tester,
   }) async {
@@ -72,12 +73,14 @@ class ObscureWidgetStep extends TestRunnerStep {
     );
     var finder = await waitFor(
       testableId,
+      cancelToken: cancelToken,
       tester: tester,
       timeout: timeout,
     );
 
     await sleep(
       tester.delays.postFoundWidget,
+      cancelStream: cancelToken.stream,
       tester: tester,
     );
 
