@@ -2,7 +2,6 @@ import 'package:automated_testing_framework/automated_testing_framework.dart';
 import 'package:flutter/material.dart';
 import 'package:json_class/json_class.dart';
 import 'package:json_theme/json_theme.dart';
-import 'package:meta/meta.dart';
 
 /// Obscures / un-obscures a widget with an overlay of a specified [color].  If
 /// the [color] is [null] or [Colors.transparent] then the widget will
@@ -10,20 +9,20 @@ import 'package:meta/meta.dart';
 class ObscureWidgetStep extends TestRunnerStep {
   ObscureWidgetStep({
     this.color,
-    @required this.testableId,
+    required this.testableId,
     this.timeout,
-  }) : assert(testableId?.isNotEmpty == true);
+  }) : assert(testableId.isNotEmpty == true);
 
   /// The color to use to obscure the widget.  Will be [Colors.transparent] if
   /// not set.
-  final Color color;
+  final Color? color;
 
   /// The id of the [Testable] widget to interact with.
   final String testableId;
 
   /// The maximum amount of time this step will wait while searching for the
   /// [Testable] on the widget tree.
-  final Duration timeout;
+  final Duration? timeout;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -42,7 +41,9 @@ class ObscureWidgetStep extends TestRunnerStep {
   static ObscureWidgetStep fromDynamic(dynamic map) {
     ObscureWidgetStep result;
 
-    if (map != null) {
+    if (map == null) {
+      throw Exception('[ObscureWidgetStep.fromDynamic]: map is null');
+    } else {
       result = ObscureWidgetStep(
         color: ThemeDecoder.decodeColor(map['color']),
         testableId: map['testableId'],
@@ -59,11 +60,11 @@ class ObscureWidgetStep extends TestRunnerStep {
   /// widget.
   @override
   Future<void> execute({
-    @required CancelToken cancelToken,
-    @required TestReport report,
-    @required TestController tester,
+    required CancelToken cancelToken,
+    required TestReport report,
+    required TestController tester,
   }) async {
-    String testableId = tester.resolveVariable(this.testableId);
+    String? testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
     var name = "obscure_widget('$testableId')";
@@ -86,8 +87,8 @@ class ObscureWidgetStep extends TestRunnerStep {
 
     var widgetFinder = finder.evaluate();
     var found = false;
-    if (widgetFinder?.isNotEmpty == true) {
-      StatefulElement element = widgetFinder.first;
+    if (widgetFinder.isNotEmpty == true) {
+      var element = widgetFinder.first as StatefulElement;
 
       var state = element.state;
       if (state is TestableState) {

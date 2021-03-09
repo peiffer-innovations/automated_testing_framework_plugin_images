@@ -4,7 +4,7 @@ import 'package:automated_testing_framework_plugin_images/automated_testing_fram
 class TestImagesHelper {
   /// Registers the test steps to the optional [registry].  If not set, the
   /// default [TestStepRegistry] will be used.
-  static void registerTestSteps([TestStepRegistry registry]) {
+  static void registerTestSteps([TestStepRegistry? registry]) {
     (registry ?? TestStepRegistry.instance).registerCustomSteps([
       TestStepBuilder(
         availableTestStep: AvailableTestStep(

@@ -9,7 +9,7 @@ void main() {
     TestImagesHelper.registerTestSteps();
     var availStep = TestStepRegistry.instance.getAvailableTestStep(
       'capture_widget',
-    );
+    )!;
 
     expect(availStep.form.runtimeType, CaptureWidgetForm);
     expect(
@@ -25,7 +25,7 @@ void main() {
     TestImagesHelper.registerTestSteps();
     var availStep = TestStepRegistry.instance.getAvailableTestStep(
       'obscure_widget',
-    );
+    )!;
 
     expect(availStep.form.runtimeType, ObscureWidgetForm);
     expect(

@@ -7,10 +7,10 @@ class ColorValidator extends ValueValidator {
   Map<String, dynamic> toJson() => {};
 
   @override
-  String validate({
-    String label,
-    Translator translator,
-    String value,
+  String? validate({
+    String? label,
+    Translator? translator,
+    String? value,
   }) {
     var valid = true;
 
@@ -18,12 +18,12 @@ class ColorValidator extends ValueValidator {
       var colorRegex = r'^#[A-Fa-f0-9]{8}';
 
       var regex = RegExp(colorRegex);
-      valid = regex.hasMatch(value);
+      valid = regex.hasMatch(value!);
     }
 
     return valid == true
         ? null
-        : translator
+        : translator!
             .translate(TestImagesTranslations.atf_images_error_not_color);
   }
 }

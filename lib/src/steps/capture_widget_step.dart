@@ -1,36 +1,37 @@
+import 'dart:async';
+
 import 'package:automated_testing_framework/automated_testing_framework.dart';
 import 'package:flutter/material.dart';
 import 'package:json_class/json_class.dart';
 import 'package:json_theme/json_theme.dart';
-import 'package:meta/meta.dart';
 
 class CaptureWidgetStep extends TestRunnerStep {
   CaptureWidgetStep({
     this.backgroundColor,
     this.goldenCompatible,
     this.imageId,
-    @required this.testableId,
+    required this.testableId,
     this.timeout,
-  }) : assert(testableId?.isNotEmpty == true);
+  }) : assert(testableId.isNotEmpty == true);
 
   /// The background color to use in the widget capture.  Will be effectively
   /// [Colors.transparent] if not set.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Set to [false] if the image being taken is not compatible with being a
   /// golden image.
-  final bool goldenCompatible;
+  final bool? goldenCompatible;
 
   /// The id to use for the screenshot.  Defaults to 'widget_$testableId' if not
   /// set.
-  final String imageId;
+  final String? imageId;
 
   /// The id of the [Testable] widget to interact with.
   final String testableId;
 
   /// The maximum amount of time this step will wait while searching for the
   /// [Testable] on the widget tree.
-  final Duration timeout;
+  final Duration? timeout;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -51,7 +52,9 @@ class CaptureWidgetStep extends TestRunnerStep {
   static CaptureWidgetStep fromDynamic(dynamic map) {
     CaptureWidgetStep result;
 
-    if (map != null) {
+    if (map == null) {
+      throw Exception('[CaptureWidgetStep.fromDynamic]: map is null');
+    } else {
       result = CaptureWidgetStep(
         backgroundColor: ThemeDecoder.decodeColor(map['backgroundColor']),
         goldenCompatible: map['goldenCompatible'] == null
@@ -71,12 +74,12 @@ class CaptureWidgetStep extends TestRunnerStep {
   /// screenshot.
   @override
   Future<void> execute({
-    @required CancelToken cancelToken,
-    @required TestReport report,
-    @required TestController tester,
+    required CancelToken cancelToken,
+    required TestReport report,
+    required TestController tester,
   }) async {
-    String imageId = tester.resolveVariable(this.imageId);
-    String testableId = tester.resolveVariable(this.testableId);
+    String? imageId = tester.resolveVariable(this.imageId);
+    String? testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
     var name = "capture_widget('$testableId')";
@@ -99,20 +102,21 @@ class CaptureWidgetStep extends TestRunnerStep {
 
     var widgetFinder = finder.evaluate();
     var found = false;
-    if (widgetFinder?.isNotEmpty == true) {
-      StatefulElement element = widgetFinder.first;
+    if (widgetFinder.isNotEmpty == true) {
+      var element = widgetFinder.first as StatefulElement;
 
       var state = element.state;
       if (state is TestableState) {
         try {
-          var image = await state.captureImage(backgroundColor);
           found = true;
-
-          report?.attachScreenshot(
-            image,
-            goldenCompatible: goldenCompatible ?? true,
-            id: imageId ?? 'widget_$testableId',
-          );
+          var image = await state.captureImage(backgroundColor);
+          if (image != null) {
+            report.attachScreenshot(
+              image,
+              goldenCompatible: goldenCompatible ?? true,
+              id: imageId ?? 'widget_$testableId',
+            );
+          }
         } catch (e) {
           found = false;
         }

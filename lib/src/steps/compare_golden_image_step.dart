@@ -1,11 +1,10 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:automated_testing_framework/automated_testing_framework.dart';
 import 'package:automated_testing_framework_plugin_images/automated_testing_framework_plugin_images.dart';
-import 'package:flutter/material.dart';
 import 'package:json_class/json_class.dart';
 import 'package:json_theme/json_theme.dart';
-import 'package:meta/meta.dart';
 
 /// Compares the images and fails if more that [allowedDelta] percentage of
 /// pixels are different.  By default, the difference is allowed to be 1% of the
@@ -21,9 +20,9 @@ class CompareGoldenImageStep extends TestRunnerStep {
             imageOnFail == 'masked');
 
   final dynamic allowedDelta;
-  final bool failWhenGoldenMissing;
-  final String imageId;
-  final String imageOnFail;
+  final bool? failWhenGoldenMissing;
+  final String? imageId;
+  final String? imageOnFail;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -32,7 +31,8 @@ class CompareGoldenImageStep extends TestRunnerStep {
   /// {
   ///   "allowedDelta": <double>,
   ///   "failWhenGoldenMissing": <bool>,
-  ///   "imageId": <String>
+  ///   "imageId": <String>,
+  ///   "imageOnFail": <String>
   /// }
   /// ```
   ///
@@ -42,7 +42,9 @@ class CompareGoldenImageStep extends TestRunnerStep {
   static CompareGoldenImageStep fromDynamic(dynamic map) {
     CompareGoldenImageStep result;
 
-    if (map != null) {
+    if (map == null) {
+      throw Exception('[CompareGoldenImageStep.fromDynamic]: map is null');
+    } else {
       result = CompareGoldenImageStep(
         allowedDelta: JsonClass.parseDouble(map['allowedDelta']),
         failWhenGoldenMissing: map['failWhenGoldenMissing'] == null
@@ -61,19 +63,24 @@ class CompareGoldenImageStep extends TestRunnerStep {
   /// images and return a result.
   @override
   Future<void> execute({
-    @required CancelToken cancelToken,
-    @required TestReport report,
-    @required TestController tester,
+    required CancelToken cancelToken,
+    required TestReport report,
+    required TestController tester,
   }) async {
     var allowedDelta = JsonClass.parseDouble(
       tester.resolveVariable(this.allowedDelta),
       0.01,
     );
-    var imageId = this.imageId ??
-        report?.images
-            ?.where((image) => image.goldenCompatible == true)
-            ?.last
-            ?.id;
+    var imageId = this.imageId;
+
+    try {
+      imageId ??= report.images
+          .where((image) => image.goldenCompatible == true)
+          .last
+          .id;
+    } catch (e) {
+      // no-op
+    }
     if (imageId?.isNotEmpty != true) {
       throw Exception('compare_golden_image: No imageId found');
     }
@@ -85,17 +92,21 @@ class CompareGoldenImageStep extends TestRunnerStep {
       tester: tester,
     );
 
-    var actual =
-        report?.images?.where((image) => image.id == imageId)?.first?.image;
+    Uint8List? actual;
+    try {
+      actual = report.images.where((image) => image.id == imageId).first.image;
+    } catch (e) {
+      // no-op
+    }
     if (actual == null) {
       throw Exception('imageId: [$imageId] -- error loading actual image');
     }
 
     var master = await tester.testImageReader(
-      deviceInfo: report.deviceInfo,
-      imageId: imageId,
+      deviceInfo: report.deviceInfo!,
+      imageId: imageId!,
       suiteName: report.suiteName,
-      testName: report.name,
+      testName: report.name!,
       testVersion: report.version,
     );
 
@@ -111,8 +122,8 @@ class CompareGoldenImageStep extends TestRunnerStep {
         var failImage =
             imageOnFail == 'isolated' ? result.isolated : result.masked;
         if (failImage != null) {
-          report?.attachScreenshot(
-            (await failImage.toByteData(format: ImageByteFormat.png))
+          report.attachScreenshot(
+            (await failImage.toByteData(format: ImageByteFormat.png))!
                 .buffer
                 .asUint8List(),
             goldenCompatible: false,

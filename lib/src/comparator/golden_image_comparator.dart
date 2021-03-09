@@ -6,13 +6,11 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-
 class GoldenImageComparator {
   Future<ComparisonResult> compareLists(
-    List<int> test,
-    List<int> master,
-    double allowedDelta,
+    List<int>? test,
+    List<int>? master,
+    double? allowedDelta,
   ) async {
     if (identical(test, master)) return ComparisonResult(passed: true);
 
@@ -33,9 +31,6 @@ class GoldenImageComparator {
     final masterImage = (await masterImageCodec.getNextFrame()).image;
     final masterImageRgba = await masterImage.toByteData();
 
-    assert(testImage != null);
-    assert(masterImage != null);
-
     final width = testImage.width;
     final height = testImage.height;
 
@@ -50,8 +45,8 @@ class GoldenImageComparator {
 
     var pixelDiffCount = 0;
     final totalPixels = width * height;
-    final invertedMasterRgba = _invert(masterImageRgba);
-    final invertedTestRgba = _invert(testImageRgba);
+    final invertedMasterRgba = _invert(masterImageRgba!);
+    final invertedTestRgba = _invert(testImageRgba!);
 
     final maskedDiffRgba = await testImage.toByteData();
     final isolatedDiffRgba = ByteData(width * height * 4);
@@ -77,7 +72,7 @@ class GoldenImageComparator {
             _toABGR(invertedMasterPixel),
             _toABGR(invertedTestPixel),
           ));
-          maskedDiffRgba.setUint32(byteOffset, maskPixel);
+          maskedDiffRgba!.setUint32(byteOffset, maskPixel);
           isolatedDiffRgba.setUint32(byteOffset, maskPixel);
           pixelDiffCount++;
         }
@@ -86,14 +81,14 @@ class GoldenImageComparator {
 
     var delta = pixelDiffCount / totalPixels;
 
-    if (delta > allowedDelta) {
+    if (delta > allowedDelta!) {
       return ComparisonResult(
         passed: false,
         error: 'Pixel test failed, '
             '${((pixelDiffCount / totalPixels) * 100).toStringAsFixed(2)}% '
             'diff detected.',
         isolated: await _createImage(isolatedDiffRgba, width, height),
-        masked: await _createImage(maskedDiffRgba, width, height),
+        masked: await _createImage(maskedDiffRgba!, width, height),
       );
     }
     return ComparisonResult(passed: true);
@@ -161,14 +156,14 @@ class ComparisonResult {
     this.error,
     this.isolated,
     this.masked,
-    @required this.passed,
-  }) : assert(passed != null);
+    required this.passed,
+  });
 
   /// Error message used to describe the cause of the pixel comparison failure.
-  final String error;
+  final String? error;
 
-  final Image isolated;
-  final Image masked;
+  final Image? isolated;
+  final Image? masked;
 
   /// Indicates whether or not a pixel comparison test has failed.
   ///
