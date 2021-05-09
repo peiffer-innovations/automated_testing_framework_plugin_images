@@ -10,6 +10,13 @@ class HideWidgetStep extends TestRunnerStep {
     this.timeout,
   }) : assert(testableId.isNotEmpty == true);
 
+  static const id = 'hide_widget';
+
+  static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
+        '`{{hide}}` the `{{testableId}}` widget.',
+        '`{{hide}}` the `{{testableId}}` widget, and fail if the widget cannot be found within `{{timeout}}` seconds.',
+      ]);
+
   /// Set to [true] to hide the widget and [false] to show it.
   final bool? hide;
 
@@ -19,6 +26,9 @@ class HideWidgetStep extends TestRunnerStep {
   /// The maximum amount of time this step will wait while searching for the
   /// [Testable] on the widget tree.
   final Duration? timeout;
+
+  @override
+  String get stepId => id;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -60,7 +70,7 @@ class HideWidgetStep extends TestRunnerStep {
     String? testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
-    var name = "hide_widget('$testableId', '$hide)";
+    var name = "$id('$testableId', '$hide)";
     log(
       name,
       tester: tester,
@@ -98,6 +108,20 @@ class HideWidgetStep extends TestRunnerStep {
         'testableId: [$testableId] -- could not locate Testable with a functional [opacity] method.',
       );
     }
+  }
+
+  @override
+  String getBehaviorDrivenDescription() {
+    var result = timeout == null
+        ? behaviorDrivenDescriptions[0]
+        : behaviorDrivenDescriptions[1];
+
+    result = result.replaceAll('{{hide}}', hide == false ? 'show' : 'hide');
+    result = result.replaceAll('{{testableId}}', testableId);
+    result = result.replaceAll(
+        '{{timeout}}', timeout?.inSeconds.toString() ?? 'null');
+
+    return result;
   }
 
   /// Converts this to a JSON compatible map.  For a description of the format,

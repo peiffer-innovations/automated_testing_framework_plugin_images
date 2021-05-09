@@ -19,10 +19,20 @@ class CompareGoldenImageStep extends TestRunnerStep {
             imageOnFail == 'isolated' ||
             imageOnFail == 'masked');
 
+  static const id = 'compare_golden_image';
+
+  static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
+        'compares the last image to the saved golden image, will `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
+        'compares the `{{imageId}}` the saved golden image, will `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
+      ]);
+
   final dynamic allowedDelta;
   final bool? failWhenGoldenMissing;
   final String? imageId;
   final String? imageOnFail;
+
+  @override
+  String get stepId => id;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -86,7 +96,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
     }
 
     var name =
-        "compare_golden_image('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
+        "$id('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
     log(
       name,
       tester: tester,
@@ -135,6 +145,27 @@ class CompareGoldenImageStep extends TestRunnerStep {
     }
   }
 
+  @override
+  String getBehaviorDrivenDescription() {
+    var result = imageId == null
+        ? behaviorDrivenDescriptions[0]
+        : behaviorDrivenDescriptions[1];
+
+    result = result.replaceAll('{{allowedDelta}}',
+        allowedDelta == null ? '0' : allowedDelta!.toString());
+    result = result.replaceAll('{{imageId}}', imageId ?? 'null');
+    result = result.replaceAll(
+      '{{failWhenGoldenMissing}}',
+      failWhenGoldenMissing == true ? 'fail' : 'not fail',
+    );
+    result =
+        result.replaceAll('{{aAn}}', imageOnFail == 'isolated' ? 'an' : 'a');
+    result = result.replaceAll(
+        '{{imageOnFail}}', imageOnFail == 'isolated' ? 'isolated' : 'masked');
+
+    return result;
+  }
+
   /// Overidden to ignore the delay
   @override
   Future<void> preStepSleep(Duration duration) async {}
@@ -147,6 +178,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
   /// see [fromDynamic].
   @override
   Map<String, dynamic> toJson() => {
+        'allowedDelta': allowedDelta,
         'failWhenGoldenMissing': failWhenGoldenMissing,
         'imageId': imageId,
         'imageOnFail': imageOnFail,

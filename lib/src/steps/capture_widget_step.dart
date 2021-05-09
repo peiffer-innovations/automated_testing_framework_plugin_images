@@ -14,6 +14,13 @@ class CaptureWidgetStep extends TestRunnerStep {
     this.timeout,
   }) : assert(testableId.isNotEmpty == true);
 
+  static const id = 'capture_widget';
+
+  static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
+        'capture the widget named `{{testableId}}`, apply a `{{backgroundColor}}` background, set the golden state to `{{goldenCompatible}}`, and give it the `{{imageId}}` id.',
+        'capture the widget named `{{testableId}}`, apply a `{{backgroundColor}}` background, set the golden state to `{{goldenCompatible}}`, give it the `{{imageId}}` id, and fail if not found within `{{timeout}}` seconds.',
+      ]);
+
   /// The background color to use in the widget capture.  Will be effectively
   /// [Colors.transparent] if not set.
   final Color? backgroundColor;
@@ -32,6 +39,9 @@ class CaptureWidgetStep extends TestRunnerStep {
   /// The maximum amount of time this step will wait while searching for the
   /// [Testable] on the widget tree.
   final Duration? timeout;
+
+  @override
+  String get stepId => id;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -82,7 +92,7 @@ class CaptureWidgetStep extends TestRunnerStep {
     String? testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
-    var name = "capture_widget('$testableId')";
+    var name = "$id('$testableId')";
     log(
       name,
       tester: tester,
@@ -127,6 +137,34 @@ class CaptureWidgetStep extends TestRunnerStep {
         'testableId: [$testableId] -- could not locate Testable with a functional [captureImage] method.',
       );
     }
+  }
+
+  @override
+  String getBehaviorDrivenDescription() {
+    var result = behaviorDrivenDescriptions[0];
+
+    if (timeout != null) {
+      result = behaviorDrivenDescriptions[1];
+      result = result.replaceAll('{{timeout}}', timeout!.inSeconds.toString());
+    }
+
+    result = result.replaceAll(
+      '{{backgroundColor}}',
+      backgroundColor == null
+          ? 'transparent'
+          : '#${backgroundColor!.value.toRadixString(16).padLeft(8, '0')}',
+    );
+    result = result.replaceAll(
+      '{{goldenCompatible}}',
+      (goldenCompatible ?? true).toString(),
+    );
+    result = result.replaceAll(
+      '{{imageId}}',
+      imageId == null ? 'widget_$testableId' : imageId!,
+    );
+    result = result.replaceAll('{{testableId}}', testableId);
+
+    return result;
   }
 
   /// Overidden to ignore the delay

@@ -13,6 +13,13 @@ class ObscureWidgetStep extends TestRunnerStep {
     this.timeout,
   }) : assert(testableId.isNotEmpty == true);
 
+  static const id = 'obscure_widget';
+
+  static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
+        'overlay the `{{testableId}}` widget with a solid container using `{{color}}` as the color.',
+        'overlay the `{{testableId}}` widget with a solid container using `{{color}}` as the color, and fail if the widget cannot be found within `{{timeout}}` seconds.',
+      ]);
+
   /// The color to use to obscure the widget.  Will be [Colors.transparent] if
   /// not set.
   final Color? color;
@@ -23,6 +30,9 @@ class ObscureWidgetStep extends TestRunnerStep {
   /// The maximum amount of time this step will wait while searching for the
   /// [Testable] on the widget tree.
   final Duration? timeout;
+
+  @override
+  String get stepId => id;
 
   /// Creates an instance from a JSON-like map structure.  This expects the
   /// following format:
@@ -105,6 +115,25 @@ class ObscureWidgetStep extends TestRunnerStep {
         'testableId: [$testableId] -- could not locate Testable with a functional [obscure] method.',
       );
     }
+  }
+
+  @override
+  String getBehaviorDrivenDescription() {
+    var result = timeout == null
+        ? behaviorDrivenDescriptions[0]
+        : behaviorDrivenDescriptions[1];
+
+    result = result.replaceAll(
+      '{{color}}',
+      color == null
+          ? 'transparent'
+          : '#${color!.value.toRadixString(16).padLeft(8, '0')}',
+    );
+    result = result.replaceAll('{{testableId}}', testableId);
+    result = result.replaceAll(
+        '{{timeout}}', timeout?.inSeconds.toString() ?? 'null');
+
+    return result;
   }
 
   /// Converts this to a JSON compatible map.  For a description of the format,
