@@ -118,7 +118,7 @@ class ObscureWidgetStep extends TestRunnerStep {
   }
 
   @override
-  String getBehaviorDrivenDescription() {
+  String getBehaviorDrivenDescription(TestController tester) {
     var result = timeout == null
         ? behaviorDrivenDescriptions[0]
         : behaviorDrivenDescriptions[1];

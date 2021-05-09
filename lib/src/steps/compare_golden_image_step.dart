@@ -146,7 +146,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
   }
 
   @override
-  String getBehaviorDrivenDescription() {
+  String getBehaviorDrivenDescription(TestController tester) {
     var result = imageId == null
         ? behaviorDrivenDescriptions[0]
         : behaviorDrivenDescriptions[1];
