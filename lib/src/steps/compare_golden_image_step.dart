@@ -22,8 +22,8 @@ class CompareGoldenImageStep extends TestRunnerStep {
   static const id = 'compare_golden_image';
 
   static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
-        'compares the last image to the saved golden image, will `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
-        'compares the `{{imageId}}` the saved golden image, will `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
+        'compare the last image to the saved golden image, `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
+        'compare the `{{imageId}}` the saved golden image, `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
       ]);
 
   final dynamic allowedDelta;
