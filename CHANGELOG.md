@@ -1,3 +1,8 @@
+## [3.0.2] - June 21st, 2021
+
+* Added variable `disable_golden_image` that can be set on the `TestController` to allow for disabling golden images when set to `true`.
+
+
 ## [3.0.1+3] - May 30th, 2021
 
 * Updated dependencies and podfiles

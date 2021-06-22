@@ -4,7 +4,7 @@ import 'package:json_class/json_class.dart';
 import 'package:json_theme/json_theme.dart';
 
 /// Obscures / un-obscures a widget with an overlay of a specified [color].  If
-/// the [color] is [null] or [Colors.transparent] then the widget will
+/// the [color] is `null` or [Colors.transparent] then the widget will
 /// un-obscure.
 class ObscureWidgetStep extends TestRunnerStep {
   ObscureWidgetStep({

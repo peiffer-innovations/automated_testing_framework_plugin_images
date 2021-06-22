@@ -71,6 +71,7 @@ class CompareGoldenImageForm extends TestStepForm {
               defaultValue: 'masked',
               id: 'imageOnFail',
               items: [
+                'both',
                 'isolated',
                 'masked',
               ],

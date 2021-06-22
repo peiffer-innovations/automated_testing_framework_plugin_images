@@ -16,10 +16,15 @@ class CompareGoldenImageStep extends TestRunnerStep {
     this.imageId,
     this.imageOnFail,
   }) : assert(imageOnFail == null ||
+            imageOnFail == 'both' ||
             imageOnFail == 'isolated' ||
             imageOnFail == 'masked');
 
   static const id = 'compare_golden_image';
+
+  /// Name of the variable that when set to `true` can be set on a
+  /// [TestController] to be able disable the golden images.
+  static const kDisableGoldenImageVariable = 'disable_golden_image';
 
   static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
         'compare the last image to the saved golden image, `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
@@ -77,70 +82,102 @@ class CompareGoldenImageStep extends TestRunnerStep {
     required TestReport report,
     required TestController tester,
   }) async {
-    var allowedDelta = JsonClass.parseDouble(
-      tester.resolveVariable(this.allowedDelta),
-      0.01,
-    );
-    var imageId = this.imageId;
+    var enabled = JsonClass.parseBool(
+          tester.getVariable(kDisableGoldenImageVariable),
+        ) !=
+        true;
 
-    try {
-      imageId ??= report.images
-          .where((image) => image.goldenCompatible == true)
-          .last
-          .id;
-    } catch (e) {
-      // no-op
-    }
-    if (imageId?.isNotEmpty != true) {
-      throw Exception('compare_golden_image: No imageId found');
-    }
+    enabled = enabled &&
+        JsonClass.parseBool(
+              tester.getVariable(ScreenshotStep.kDisableScreenshotVariable),
+            ) !=
+            true;
 
-    var name =
-        "$id('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
-    log(
-      name,
-      tester: tester,
-    );
+    if (enabled == true) {
+      var allowedDelta = JsonClass.parseDouble(
+        tester.resolveVariable(this.allowedDelta),
+        0.01,
+      );
+      var imageId = this.imageId;
 
-    Uint8List? actual;
-    try {
-      actual = report.images.where((image) => image.id == imageId).first.image;
-    } catch (e) {
-      // no-op
-    }
-    if (actual == null) {
-      throw Exception('imageId: [$imageId] -- error loading actual image');
-    }
-
-    var master = await tester.testImageReader(
-      deviceInfo: report.deviceInfo!,
-      imageId: imageId!,
-      suiteName: report.suiteName,
-      testName: report.name!,
-      testVersion: report.version,
-    );
-
-    if (master == null) {
-      if (failWhenGoldenMissing == true) {
-        throw Exception('imageId: [$imageId] -- error loading golden image');
+      try {
+        imageId ??= report.images
+            .where((image) => image.goldenCompatible == true)
+            .last
+            .id;
+      } catch (e) {
+        // no-op
       }
-    } else {
-      var comparitor = GoldenImageComparator();
-      var result = await comparitor.compareLists(actual, master, allowedDelta);
+      if (imageId?.isNotEmpty != true) {
+        throw Exception('$id: No imageId found');
+      }
 
-      if (result.passed != true) {
-        var failImage =
-            imageOnFail == 'isolated' ? result.isolated : result.masked;
-        if (failImage != null) {
-          report.attachScreenshot(
-            (await failImage.toByteData(format: ImageByteFormat.png))!
-                .buffer
-                .asUint8List(),
-            goldenCompatible: false,
-            id: 'failed-${imageId}',
-          );
+      var name =
+          "$id('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
+      log(
+        name,
+        tester: tester,
+      );
+
+      Uint8List? actual;
+      try {
+        actual =
+            report.images.where((image) => image.id == imageId).first.image;
+      } catch (e) {
+        // no-op
+      }
+      if (actual == null) {
+        throw Exception('imageId: [$imageId] -- error loading actual image');
+      }
+
+      var master = await tester.testImageReader(
+        deviceInfo: report.deviceInfo!,
+        imageId: imageId!,
+        suiteName: report.suiteName,
+        testName: report.name!,
+        testVersion: report.version,
+      );
+
+      if (master == null) {
+        if (failWhenGoldenMissing == true) {
+          throw Exception('imageId: [$imageId] -- unable to load golden');
         }
-        throw Exception('${result.error}');
+      } else {
+        var comparitor = GoldenImageComparator();
+        var result =
+            await comparitor.compareLists(actual, master, allowedDelta);
+
+        if (result.passed != true) {
+          var failImages = [];
+
+          switch (imageOnFail) {
+            case 'both':
+              failImages.add(result.isolated);
+              failImages.add(result.masked);
+              break;
+
+            case 'isolated':
+              failImages.add(result.isolated);
+              break;
+
+            default:
+              failImages.add(result.masked);
+              break;
+          }
+
+          for (var failImage in failImages) {
+            if (failImage != null) {
+              report.attachScreenshot(
+                (await failImage.toByteData(format: ImageByteFormat.png))!
+                    .buffer
+                    .asUint8List(),
+                goldenCompatible: false,
+                id: 'failed-${imageId}',
+              );
+            }
+          }
+          throw Exception('${result.error}');
+        }
       }
     }
   }

@@ -75,10 +75,11 @@ Key                | Type    | Required | Supports Variable | Description
 **How it Works**
 
 1. Loads the appropriate golden image.
-2. Compates the golden image to an image from the current `TestReport`.
-3. Fails if the current image cannot be located.
-4. Fails if it cannot load the golden image and `failWhenGoldenMissing` is `true` or omitted.
-5. Fails if the golden image has more than `allowedDelta` percentage (0 to 1 based) pixels that are different.
+2. Immediately passes if the `disable_screen_shots` or `disable_golden_images` variable on the `TestController` is `true`.  Continues otherwise.
+3. Compates the golden image to an image from the current `TestReport`.
+4. Fails if the current image cannot be located.
+5. Fails if it cannot load the golden image and `failWhenGoldenMissing` is `true` or omitted.
+6. Fails if the golden image has more than `allowedDelta` percentage (0 to 1 based) pixels that are different.
 
 **Example**
 
