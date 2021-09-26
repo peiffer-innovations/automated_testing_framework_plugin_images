@@ -1,3 +1,9 @@
+## [3.0.3] - September 26th, 2021
+
+* Fix for golden images step
+* Dependency updates
+
+
 ## [3.0.2+1] - September 19th, 2021
 
 * Dependency updates

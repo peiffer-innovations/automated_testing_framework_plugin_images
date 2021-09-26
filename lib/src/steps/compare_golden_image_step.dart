@@ -26,6 +26,11 @@ class CompareGoldenImageStep extends TestRunnerStep {
   /// [TestController] to be able disable the golden images.
   static const kDisableGoldenImageVariable = 'disable_golden_image';
 
+  /// Name of the variable that when set to `true` can be set on a
+  /// [TestController] to be able override golden images failure on missing.
+  static const kDisableGoldenImageFailOnMissingVariable =
+      'disable_golden_image_fail_on_missing';
+
   static List<String> get behaviorDrivenDescriptions => List.unmodifiable([
         'compare the last image to the saved golden image, `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
         'compare the `{{imageId}}` the saved golden image, `{{failWhenGoldenMissing}}` if a golden image is missing, ensure the images match with less than an `{{allowedDelta}}`% difference, and create {{aAn}} `{{imageOnFail}}` image on failure.',
@@ -139,7 +144,10 @@ class CompareGoldenImageStep extends TestRunnerStep {
       );
 
       if (master == null) {
-        if (failWhenGoldenMissing == true) {
+        var disableFailOnMissing = JsonClass.parseBool(
+          tester.getVariable(kDisableGoldenImageFailOnMissingVariable),
+        );
+        if (failWhenGoldenMissing == true && !disableFailOnMissing) {
           throw Exception('imageId: [$imageId] -- unable to load golden');
         }
       } else {
