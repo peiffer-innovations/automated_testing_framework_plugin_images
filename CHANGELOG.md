@@ -1,3 +1,8 @@
+## [3.0.4] - January 9th, 2022
+
+* Dependency updates
+
+
 ## [3.0.3] - September 26th, 2021
 
 * Fix for golden images step
