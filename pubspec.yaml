@@ -2,13 +2,13 @@ name: automated_testing_framework_plugin_images
 description: Library to use provide image capture and comparison capabilities to the Automated Testing Framework.
 homepage: https://github.com/peiffer-innovations/automated_testing_framework_plugin_images
 
-version: 3.0.4+2
+version: 3.0.4+3
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  automated_testing_framework: ^3.3.0
+  automated_testing_framework: ^3.3.1+1
   convert: ^3.0.1
   flutter:
     sdk: flutter
@@ -16,7 +16,7 @@ dependencies:
   json_class: ^2.1.2+4
   json_theme: ^3.3.1
   logging: ^1.0.2
-  static_translations: ^2.1.0+2
+  static_translations: ^2.1.1
 
 # dependency_overrides:
 #   automated_testing_framework:
