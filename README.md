@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [automated_testing_framework_plugin_images](#automated_testing_framework_plugin_images)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Running Example](#running-example)
+  - [Quick Start](#quick-start)
+  - [Supported Platforms](#supported-platforms)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # automated_testing_framework_plugin_images
 
 ## Table of Contents
