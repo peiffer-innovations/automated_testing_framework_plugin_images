@@ -1,3 +1,8 @@
+## [4.0.0+12] - August 9, 2022
+
+* Automated dependency updates
+
+
 ## [4.0.0+11] - August 2, 2022
 
 * Automated dependency updates
@@ -152,6 +157,7 @@
 ## [1.0.0] - September 22nd, 2020
 
 * Initial release
+
 
 
 
