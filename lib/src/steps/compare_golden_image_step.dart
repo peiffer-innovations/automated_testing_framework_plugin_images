@@ -99,7 +99,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
             true;
 
     if (enabled == true) {
-      var allowedDelta = JsonClass.parseDouble(
+      final allowedDelta = JsonClass.parseDouble(
         tester.resolveVariable(this.allowedDelta),
         0.01,
       );
@@ -117,7 +117,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
         throw Exception('$id: No imageId found');
       }
 
-      var name =
+      final name =
           "$id('$imageId', '$failWhenGoldenMissing', '$imageOnFail', '$allowedDelta')";
       log(
         name,
@@ -135,7 +135,7 @@ class CompareGoldenImageStep extends TestRunnerStep {
         throw Exception('imageId: [$imageId] -- error loading actual image');
       }
 
-      var master = await tester.testImageReader(
+      final master = await tester.testImageReader(
         deviceInfo: report.deviceInfo!,
         imageId: imageId!,
         suiteName: report.suiteName,
@@ -144,19 +144,19 @@ class CompareGoldenImageStep extends TestRunnerStep {
       );
 
       if (master == null) {
-        var disableFailOnMissing = JsonClass.parseBool(
+        final disableFailOnMissing = JsonClass.parseBool(
           tester.getVariable(kDisableGoldenImageFailOnMissingVariable),
         );
         if (failWhenGoldenMissing == true && !disableFailOnMissing) {
           throw Exception('imageId: [$imageId] -- unable to load golden');
         }
       } else {
-        var comparitor = GoldenImageComparator();
-        var result =
+        final comparitor = GoldenImageComparator();
+        final result =
             await comparitor.compareLists(actual, master, allowedDelta);
 
         if (result.passed != true) {
-          var failImages = [];
+          final failImages = [];
 
           switch (imageOnFail) {
             case 'both':

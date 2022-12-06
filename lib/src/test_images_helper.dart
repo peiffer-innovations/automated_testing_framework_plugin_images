@@ -7,11 +7,11 @@ class TestImagesHelper {
   static void registerTestSteps([TestStepRegistry? registry]) {
     (registry ?? TestStepRegistry.instance).registerCustomSteps([
       TestStepBuilder(
-        availableTestStep: AvailableTestStep(
+        availableTestStep: const AvailableTestStep(
           form: CaptureWidgetForm(),
           help: TestImagesTranslations.atf_images_help_capture_widget,
           id: 'capture_widget',
-          keys: const {
+          keys: {
             'backgroundColor',
             'goldenCompatible',
             'imageId',
@@ -26,11 +26,11 @@ class TestImagesHelper {
         testRunnerStepBuilder: CaptureWidgetStep.fromDynamic,
       ),
       TestStepBuilder(
-        availableTestStep: AvailableTestStep(
+        availableTestStep: const AvailableTestStep(
           form: CompareGoldenImageForm(),
           help: TestImagesTranslations.atf_images_help_compare_golden_image,
           id: 'compare_golden_image',
-          keys: const {
+          keys: {
             'allowedDelta',
             'failWhenGoldenMissing',
             'imageId',
@@ -44,12 +44,12 @@ class TestImagesHelper {
         testRunnerStepBuilder: CompareGoldenImageStep.fromDynamic,
       ),
       TestStepBuilder(
-        availableTestStep: AvailableTestStep(
+        availableTestStep: const AvailableTestStep(
           form: HideWidgetForm(),
           help: TestImagesTranslations.atf_images_help_hide_widget,
           id: 'hide_widget',
-          keys: const {'opacity', 'testableId', 'timeout'},
-          quickAddValues: const {'hide': 'true'},
+          keys: {'opacity', 'testableId', 'timeout'},
+          quickAddValues: {'hide': 'true'},
           title: TestImagesTranslations.atf_images_title_hide_widget,
           widgetless: false,
           type: null,
@@ -57,12 +57,12 @@ class TestImagesHelper {
         testRunnerStepBuilder: HideWidgetStep.fromDynamic,
       ),
       TestStepBuilder(
-        availableTestStep: AvailableTestStep(
+        availableTestStep: const AvailableTestStep(
           form: ObscureWidgetForm(),
           help: TestImagesTranslations.atf_images_help_obscure_widget,
           id: 'obscure_widget',
-          keys: const {'color', 'testableId', 'timeout'},
-          quickAddValues: const {'color': '#FF000000'},
+          keys: {'color', 'testableId', 'timeout'},
+          quickAddValues: {'color': '#FF000000'},
           title: TestImagesTranslations.atf_images_title_obscure_widget,
           widgetless: false,
           type: null,

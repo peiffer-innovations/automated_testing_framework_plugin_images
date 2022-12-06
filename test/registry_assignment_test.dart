@@ -7,7 +7,7 @@ void main() {
 
   test('capture_widget', () {
     TestImagesHelper.registerTestSteps();
-    var availStep = TestStepRegistry.instance.getAvailableTestStep(
+    final availStep = TestStepRegistry.instance.getAvailableTestStep(
       'capture_widget',
     )!;
 
@@ -23,7 +23,7 @@ void main() {
 
   test('obscure_widget', () {
     TestImagesHelper.registerTestSteps();
-    var availStep = TestStepRegistry.instance.getAvailableTestStep(
+    final availStep = TestStepRegistry.instance.getAvailableTestStep(
       'obscure_widget',
     )!;
 

@@ -67,15 +67,15 @@ class HideWidgetStep extends TestRunnerStep {
     required TestReport report,
     required TestController tester,
   }) async {
-    String? testableId = tester.resolveVariable(this.testableId);
+    final testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
-    var name = "$id('$testableId', '$hide)";
+    final name = "$id('$testableId', '$hide)";
     log(
       name,
       tester: tester,
     );
-    var finder = await waitFor(
+    final finder = await waitFor(
       testableId,
       cancelToken: cancelToken,
       tester: tester,
@@ -88,12 +88,12 @@ class HideWidgetStep extends TestRunnerStep {
       tester: tester,
     );
 
-    var widgetFinder = finder.evaluate();
+    final widgetFinder = finder.evaluate();
     var found = false;
     if (widgetFinder.isNotEmpty == true) {
-      var element = widgetFinder.first as StatefulElement;
+      final element = widgetFinder.first as StatefulElement;
 
-      var state = element.state;
+      final state = element.state;
       if (state is TestableState) {
         try {
           await state.opacity(hide == true ? 0.0 : 1.0);

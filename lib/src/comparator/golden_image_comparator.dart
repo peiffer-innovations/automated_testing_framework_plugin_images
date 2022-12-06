@@ -79,7 +79,7 @@ class GoldenImageComparator {
       }
     }
 
-    var delta = pixelDiffCount / totalPixels;
+    final delta = pixelDiffCount / totalPixels;
 
     if (delta > allowedDelta!) {
       return ComparisonResult(

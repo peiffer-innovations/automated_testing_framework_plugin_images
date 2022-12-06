@@ -88,16 +88,16 @@ class CaptureWidgetStep extends TestRunnerStep {
     required TestReport report,
     required TestController tester,
   }) async {
-    String? imageId = tester.resolveVariable(this.imageId);
-    String? testableId = tester.resolveVariable(this.testableId);
+    final imageId = tester.resolveVariable(this.imageId);
+    final testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
-    var name = "$id('$testableId')";
+    final name = "$id('$testableId')";
     log(
       name,
       tester: tester,
     );
-    var finder = await waitFor(
+    final finder = await waitFor(
       testableId,
       cancelToken: cancelToken,
       tester: tester,
@@ -110,16 +110,16 @@ class CaptureWidgetStep extends TestRunnerStep {
       tester: tester,
     );
 
-    var widgetFinder = finder.evaluate();
+    final widgetFinder = finder.evaluate();
     var found = false;
     if (widgetFinder.isNotEmpty == true) {
-      var element = widgetFinder.first as StatefulElement;
+      final element = widgetFinder.first as StatefulElement;
 
-      var state = element.state;
+      final state = element.state;
       if (state is TestableState) {
         try {
           found = true;
-          var image = await state.captureImage(backgroundColor);
+          final image = await state.captureImage(backgroundColor);
           if (image != null) {
             report.attachScreenshot(
               image,

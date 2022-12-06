@@ -15,9 +15,9 @@ class ColorValidator extends ValueValidator {
     var valid = true;
 
     if (value?.isNotEmpty == true) {
-      var colorRegex = r'^#[A-Fa-f0-9]{8}';
+      final colorRegex = r'^#[A-Fa-f0-9]{8}';
 
-      var regex = RegExp(colorRegex);
+      final regex = RegExp(colorRegex);
       valid = regex.hasMatch(value!);
     }
 

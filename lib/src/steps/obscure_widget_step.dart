@@ -74,15 +74,15 @@ class ObscureWidgetStep extends TestRunnerStep {
     required TestReport report,
     required TestController tester,
   }) async {
-    String? testableId = tester.resolveVariable(this.testableId);
+    final testableId = tester.resolveVariable(this.testableId);
     assert(testableId?.isNotEmpty == true);
 
-    var name = "obscure_widget('$testableId')";
+    final name = "obscure_widget('$testableId')";
     log(
       name,
       tester: tester,
     );
-    var finder = await waitFor(
+    final finder = await waitFor(
       testableId,
       cancelToken: cancelToken,
       tester: tester,
@@ -95,12 +95,12 @@ class ObscureWidgetStep extends TestRunnerStep {
       tester: tester,
     );
 
-    var widgetFinder = finder.evaluate();
+    final widgetFinder = finder.evaluate();
     var found = false;
     if (widgetFinder.isNotEmpty == true) {
-      var element = widgetFinder.first as StatefulElement;
+      final element = widgetFinder.first as StatefulElement;
 
-      var state = element.state;
+      final state = element.state;
       if (state is TestableState) {
         try {
           await state.obscure(color);

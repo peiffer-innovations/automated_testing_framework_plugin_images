@@ -38,7 +38,7 @@ class CompareGoldenImageForm extends TestStepForm {
               label: TestStepTranslations.atf_form_image_id,
               values: values!,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             buildEditText(
               context: context,
               defaultValue: '0.01',
@@ -52,7 +52,7 @@ class CompareGoldenImageForm extends TestStepForm {
               ],
               values: values,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             buildDropdown(
               context: context,
               defaultValue: 'true',
@@ -65,7 +65,7 @@ class CompareGoldenImageForm extends TestStepForm {
                   TestImagesTranslations.atf_form_fail_on_missing_golden_image,
               values: values,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             buildDropdown(
               context: context,
               defaultValue: 'masked',
